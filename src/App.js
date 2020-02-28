@@ -1,26 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
+import EventForm from './EventForm';
+import EventList from './EventList';
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import eventReducer from './EventReducer'
+import thunkMiddleware from 'redux-thunk'
 
-function App() {
+const store = createStore(eventReducer, applyMiddleware(thunkMiddleware))
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Provider store={store}>
+        <EventForm />
+        <EventList />
+      </Provider>
+    </MuiPickersUtilsProvider>
   );
 }
-
-export default App;
