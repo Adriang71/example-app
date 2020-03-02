@@ -13,7 +13,7 @@ export function loadEvent() {
       type: 'LOAD_EVENT_REQUEST',
     })
 
-    fetch(`https://jsonplaceholder.typicode.com/todosxxx/`).then(
+    fetch(`/events`).then(
       response => response.json())
       .then(response =>
         dispatch({
