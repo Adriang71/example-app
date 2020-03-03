@@ -5,6 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { DatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux'
+import { postEvent } from './Actions';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -46,9 +48,11 @@ const registerValidationSchema = (schema, register) =>
 export default function App() {
   const { register, control, handleSubmit, setValue, errors } = useForm();
   const [selectedDate, setSelectedDate] = useState(null);
+  const dispatch = useDispatch()
 
   const classes = useStyles();
-  const onSubmit = data => console.log(data);
+  const onSubmit = data =>
+    dispatch(postEvent(data))
 
   const handleDateChange = date => {
     setSelectedDate(date);

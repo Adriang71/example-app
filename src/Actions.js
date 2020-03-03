@@ -6,7 +6,7 @@ export const POST_EVENT_SUCCESS = 'POST_EVENT_SUCCESS';
 export const POST_EVENT_FAILURE = 'POST_EVENT_FAILURE';
 
 export function loadEvent() {
-  return function(dispatch, getState) {
+  return (dispatch, getState) => {
     const { events } = getState()
     if (events.length > 0 ) {
       return
@@ -16,7 +16,7 @@ export function loadEvent() {
       type: 'LOAD_EVENT_REQUEST',
     })
 
-    fetch(`/events`).then(
+    fetch(`api/events`).then(
       response => response.json())
       .then(response =>
         dispatch({
@@ -34,12 +34,12 @@ export function loadEvent() {
 }
 
 export function postEvent(event) {
-  return async function(dispatch) {
+  return dispatch => {
     dispatch({
       type: 'POST_EVENT_REQUEST',
     })
 
-    fetch('/new/event', {
+    fetch('api/new/event', {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
