@@ -38,7 +38,7 @@ export default function EventList() {
   }, [dispatch]);
 
   if(isLoading) return <Grid item>Loading...</Grid>
-
+  console.log(events)
   return (
     <Grid
       container
@@ -48,20 +48,20 @@ export default function EventList() {
     >
     {isLoading && <div>Loading...</div>}
     {!isLoading && events.length > 0 &&
-      events.map(event => (
+      events.reverse().map(event => (
         <List>
           <ListItem >
             <Card className={classes.root}>
               <CardContent>
                 <Typography variant="h6" component="h3">
-                  Johne Doe
+                  {event.name} {event.lastName}
                 </Typography>
                 <Typography className={classes.pos} color="textSecondary">
 
-                  Event date {bull} 22/34/2323
+                  Event date {bull} {event.date}
                 </Typography>
                 <Typography variant="body2" component="p">
-                  johnDoe@02.pl
+                  {event.email}
                 </Typography>
               </CardContent>
               <CardActions>

@@ -12,18 +12,18 @@ import {
 } from './Actions';
 import fetchMock from 'fetch-mock'
 
-import { getAction } from './getActionUtil';
+import { getAction } from './utils';
 
-export const mockStore = configureMockStore([thunk]);
+const mockStore = configureMockStore([thunk]);
 
-describe("form  shoulde", () => {
+describe("actions shoulde", () => {
   it("handles fetch all events ", async () => {
     const store = mockStore({
       isLoading: false,
       events: []
     });
 
-    fetchMock.get('/events', {response: 200} )
+    fetchMock.get('/api/events', {response: 200} )
 
     store.dispatch(loadEvent());
     expect(await getAction(store, LOAD_EVENT_REQUEST)).toEqual({type: LOAD_EVENT_REQUEST});
@@ -37,7 +37,7 @@ describe("form  shoulde", () => {
       events: []
     });
 
-    fetchMock.get('/events',  500, { overwriteRoutes: false })
+    fetchMock.get('/api/events',  500, { overwriteRoutes: false })
 
     store.dispatch(loadEvent());
     expect(await getAction(store, LOAD_EVENT_REQUEST)).toEqual({type: LOAD_EVENT_REQUEST});
@@ -48,18 +48,21 @@ describe("form  shoulde", () => {
   it("handles POST events ", async () => {
     const store = mockStore({});
 
-    fetchMock.post('*', { response: 200 })
+    fetchMock.post('api/new/event', { response: 200 })
+    fetchMock.get('/api/events', {response: 200} )
 
     store.dispatch(postEvent({name: 'foo', lastName: 'bar', email: 'foo@bar.pl', date: '22/02/22'}));
     expect(await getAction(store, POST_EVENT_REQUEST)).toEqual({type: POST_EVENT_REQUEST});
     expect(await getAction(store, POST_EVENT_SUCCESS)).toEqual({type: POST_EVENT_SUCCESS, response: {response: 200}});
+    expect(await getAction(store, LOAD_EVENT_REQUEST)).toEqual({type: LOAD_EVENT_REQUEST});
+    expect(await getAction(store, LOAD_EVENT_SUCCESS)).toEqual({type: LOAD_EVENT_SUCCESS, response: {response: 200}});
     fetchMock.restore();
   });
 
   it("handles not POST event", async () => {
     const store = mockStore({});
 
-    fetchMock.post('/new/event',  500, { overwriteRoutes: false } )
+    fetchMock.post('api/new/event',  500, { overwriteRoutes: false } )
 
     store.dispatch(postEvent({name: 'foo', lastName: 'bar', email: 'foo@bar.pl', date: '22/02/22'}));
     expect(await getAction(store, POST_EVENT_REQUEST)).toEqual({type: POST_EVENT_REQUEST});

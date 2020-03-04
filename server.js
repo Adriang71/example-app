@@ -30,20 +30,17 @@ client.connect(err => {
 // Put all API endpoints under '/api'
 
 app.get('/api/events', (req, res) => {
-
-  res.body('In');
-
-  return res.send(200)
+  db.collection('events').find().toArray((err, result) => {
+    if(err) return console.log(err);
+    return res.json(result);
+  })
 });
 
 app.post('/api/new/event', (req, res) => {
-  console.log(req.body)
   db.collection('events').insertOne(req.body, (err) => {
-    if (err) return console.log(err)
-
-    console.log('saved to database')
+    if (err) return res.send(err)
   })
-  return res.send('Saved to database')
+  return res.json({ result: 'Success' });
 });
 
 app.get("*", (req, res) => {

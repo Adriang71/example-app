@@ -6,12 +6,7 @@ export const POST_EVENT_SUCCESS = 'POST_EVENT_SUCCESS';
 export const POST_EVENT_FAILURE = 'POST_EVENT_FAILURE';
 
 export function loadEvent() {
-  return (dispatch, getState) => {
-    const { events } = getState()
-    if (events.length > 0 ) {
-      return
-    }
-
+  return (dispatch) => {
     dispatch({
       type: 'LOAD_EVENT_REQUEST',
     })
@@ -52,13 +47,15 @@ export function postEvent(event) {
       body: JSON.stringify(event)
     }).then(
       response => response.json())
-      .then(response =>
+      .then(response => {
         dispatch({
           type: 'POST_EVENT_SUCCESS',
           response
-        }),
+        })
+        dispatch(loadEvent())
+      },
       error => {
-        return dispatch({
+        dispatch({
           type: 'POST_EVENT_FAILURE',
           error: error.type,
         })
