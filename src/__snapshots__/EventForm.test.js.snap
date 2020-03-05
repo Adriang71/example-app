@@ -99,6 +99,7 @@ exports[`form should display properly 1`] = `
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiInput-input"
+              name="date"
               readonly=""
               type="text"
               value=""
@@ -231,6 +232,7 @@ exports[`form should display properly 2`] = `
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiInput-input"
+              name="date"
               readonly=""
               type="text"
               value=""

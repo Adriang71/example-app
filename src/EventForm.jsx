@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { useForm, Controller, ErrorMessage } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux'
+import { postEvent } from './Actions';
+import { Controller, ErrorMessage } from "react-hook-form";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { DatePicker } from '@material-ui/pickers';
-import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux'
-import { postEvent } from './Actions';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -45,14 +46,15 @@ const validationSchema = {
 const registerValidationSchema = (schema, register) =>
   Object.keys(schema).forEach(name =>  register({ name }, schema[name]));
 
-export default function App() {
+export default function EventForm({onSubmit}) {
   const { register, control, handleSubmit, setValue, errors } = useForm();
   const [selectedDate, setSelectedDate] = useState(null);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const classes = useStyles();
-  const onSubmit = data =>
+  const formSubmission = data =>{
+    console.log('============================================= fire',errors, )
     dispatch(postEvent(data))
+  }
 
   const handleDateChange = date => {
     setSelectedDate(date);
@@ -62,6 +64,8 @@ export default function App() {
     registerValidationSchema(validationSchema, register)
   }, [register]);
 
+  const classes = useStyles();
+
   return (
     <Grid
       container
@@ -70,7 +74,9 @@ export default function App() {
       alignItems="center"
     >
       <Grid item className={classes.wrapper}>
-        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+        <form
+        className={classes.form}
+        onSubmit={onSubmit || handleSubmit(formSubmission)}>
           <Controller
             as={<TextField />}
             name="name"
@@ -111,6 +117,7 @@ export default function App() {
             value={selectedDate}
             format="YYYY/MM/DD"
             label="Date"
+            name="date"
             error={Boolean(errors.date)}
             onChange={moment => {
               handleDateChange(moment.format("YYYY/MM/DD"));
