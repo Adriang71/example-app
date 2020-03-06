@@ -51,10 +51,9 @@ export default function EventForm({onSubmit}) {
   const [selectedDate, setSelectedDate] = useState(null);
   const dispatch = useDispatch();
 
-  const formSubmission = data =>{
-    console.log('============================================= fire',errors, )
+  const formSubmission = data =>
     dispatch(postEvent(data))
-  }
+
 
   const handleDateChange = date => {
     setSelectedDate(date);

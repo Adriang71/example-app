@@ -1,6 +1,5 @@
 import React from 'react'
-import ReactTestUtils from 'react-dom/test-utils';
-import { render, fireEvent, act } from '@testing-library/react';
+import { render, fireEvent, wait } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
@@ -70,37 +69,132 @@ describe("form should", () => {
     const date = container.querySelector('input[name="date"]')
     const submit = container.querySelector('button[type="submit"]')
 
-    await act(async () => {
 
-      await fireEvent.change(name, {
-        target: {
-          value: 'mockname'
-        }
-      })
 
-      await fireEvent.change(lastName, {
-        target: {
-          value: 'mocklastname'
-        }
-      })
+    fireEvent.change(name, {
+      target: {
+        value: 'mockname'
+      }
+    })
 
-      await fireEvent.change(email, {
-        target: {
-          value: 'example@o2.pl'
-        }
-      })
+    fireEvent.change(lastName, {
+      target: {
+        value: 'mocklastname'
+      }
+    })
 
-      await fireEvent.change(date, {
-        target: {
-          value: '22/02/2022'
-        }
-      })
+      fireEvent.change(email, {
+      target: {
+        value: 'example@o2.pl'
+      }
+    })
 
-      await fireEvent.click(submit);
+    fireEvent.change(date, {
+      target: {
+        value: '22/02/2022'
+      }
+    })
 
-      expect(onSubmit).toHaveBeenCalled();
+    fireEvent.click(submit);
+
+    expect(onSubmit).toHaveBeenCalled();
+    await wait(() => {
       expect(queryByText('Required*')).toBeNull()
+    });
+
+  });
+
+  it("contains errors", async () => {
+    const store = mockStore({
+      isLoading: false,
+      events:[]
+    });
+    const { container, getAllByText } = render(
+      <TestProvider store={store}>
+        <EventForm  />
+      </TestProvider>
+    );
+
+    const submit = container.querySelector('button[type="submit"]')
+
+    fireEvent.click(submit);
+    await wait(() => {
+      expect(getAllByText('Required*')).not.toBeNull()
+    });
+  });
+
+  it("contain email format errors", async () => {
+    const store = mockStore({
+      isLoading: false,
+      events:[]
+    });
+    const { container, getByText, getAllByText } = render(
+      <TestProvider store={store}>
+        <EventForm  />
+      </TestProvider>
+    );
+
+    const email = container.querySelector('input[name="email"]')
+    const submit = container.querySelector('button[type="submit"]')
+
+    fireEvent.change(email, {
+      target: {
+        value: 'example'
+      }
+    })
+
+    fireEvent.click(submit);
+    await wait(() => {
+      expect(getAllByText('Required*')).not.toBeNull()
+      expect(getByText('Incorrect e-mail address.')).not.toBeNull()
+    });
+  });
+
+  it("contain length input errors", async () => {
+    const store = mockStore({
+      isLoading: false,
+      events:[]
+    });
+    const { container, getByText } = render(
+      <TestProvider store={store}>
+        <EventForm  />
+      </TestProvider>
+    );
+
+
+    const name = container.querySelector('input[name="name"]')
+    const lastName = container.querySelector('input[name="lastName"]')
+    const email = container.querySelector('input[name="email"]')
+    const submit = container.querySelector('button[type="submit"]')
+
+
+    fireEvent.change(name, {
+      target: {
+        value: 'fo'
+      }
+    })
+
+    fireEvent.change(lastName, {
+      target: {
+        value: 'fo'
+      }
+    })
+
+    fireEvent.change(email, {
+      target: {
+        value: 'fo'
+      }
+    })
+
+    fireEvent.click(submit);
+    await wait(() => {
+      expect(getByText('Name should contain minimum 3 leather')).not.toBeNull()
+      expect(getByText('Last name should contain minimum 3 leather')).not.toBeNull()
+      expect(getByText('Email should contain minimum 3 leather')).not.toBeNull()
+      expect(getByText('Required*')).not.toBeNull()
     });
   });
 
 });
+
+

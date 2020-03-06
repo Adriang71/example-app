@@ -38,7 +38,7 @@ export default function EventList() {
   }, [dispatch]);
 
   if(isLoading) return <Grid item>Loading...</Grid>
-  console.log(events)
+
   return (
     <Grid
       container
@@ -49,7 +49,7 @@ export default function EventList() {
     {isLoading && <div>Loading...</div>}
     {!isLoading && events.length > 0 &&
       events.reverse().map(event => (
-        <List>
+        <List key={event.id}>
           <ListItem >
             <Card className={classes.root}>
               <CardContent>
@@ -65,7 +65,7 @@ export default function EventList() {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small">Learn More</Button>
+                <Button size="small">Check Event</Button>
               </CardActions>
             </Card>
           </ListItem>
