@@ -13,7 +13,7 @@
     "fetch-mock": "^9.0.0-beta.2",
     "moment": "^2.24.0",
     "mongodb": "^3.5.4",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-hook-form": "^4.9.8",
